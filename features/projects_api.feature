@@ -10,11 +10,11 @@ Feature: OpenStack Project API
     Given I have an admin account
 
   Scenario: List projects
-    Given I retrieve 'Identity' service as an admin
+    Given I retrieve Identity service as an admin
     Then there is at least one project
 
   Scenario: Create and delete project
-    Given I retrieve 'Identity' service as an admin
+    Given I retrieve Identity service as an admin
     Given I generate a unique project name
     And that project name is not used
     When I create the new project

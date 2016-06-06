@@ -33,18 +33,10 @@ Given(/^I have an? (admin|member) account$/) do |type|
   expect(keystone.current_tenant['name']).to eql(config['project'])
 end
 
-def _retrieve_service as, service
+Given(/^I retrieve (\w+) service as an (admin|member)$/) do |service,as|
   # Save requested service as an instance variable
   self.instance_variable_set(
     "@#{service.downcase}",
     Fog.const_get(service).new(instance_variable_get("@#{as}_connection_params"))
   )
-end
-
-Given(/^I retrieve '(.*?)' service as an admin$/) do |service|
-  _retrieve_service :admin, service
-end
-
-Given(/^I retrieve '(.*?)' service as a member$/) do |service|
-  _retrieve_service :member, service
 end
