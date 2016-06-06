@@ -6,7 +6,7 @@ Feature: OpenStack Project API
   In order to provide projects on OpenStack
 
   Background:
-    Given I have an OpenStack environment.
+    Given I have an OpenStack environment
     Given I have an admin account
 
   Scenario: List projects

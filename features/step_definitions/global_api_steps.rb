@@ -1,6 +1,6 @@
 # coding: utf-8
 
-Given(/^I have an OpenStack environment\.$/) do
+Given(/^I have an OpenStack environment$/) do
   expect($os_config.keys).to include('platform')
   @platform_config = $os_config['platform']
   expect(@platform_config.keys).to include('openstack_auth_url')
