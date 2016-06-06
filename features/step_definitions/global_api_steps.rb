@@ -40,3 +40,67 @@ Given(/^I retrieve (\w+) service as an (admin|member)$/) do |service,as|
     Fog.const_get(service).new(instance_variable_get("@#{as}_connection_params"))
   )
 end
+
+Given(/I only use the (\w+) service/) do |service|
+  @main_service = instance_variable_get("@#{service.downcase}")
+end
+
+Then(/(\w+) have at least one item/) do |model|
+  expect(@main_service.send(model).all.count).to be >= 1
+end
+
+Given(/^I generate a (\w+) name$/) do |model|
+  instance_variable_set(
+    "@#{model}_name",
+    "ccmbr-#{model}-#{SecureRandom.hex(4)}",
+  )
+end
+
+def _pluralize model
+  case model
+  when 'unknown_model'
+    ''
+  else
+    "#{model}s"
+  end
+end
+
+def _get_model_name model
+  # Retrieve name
+  name = instance_variable_get("@#{model}_name")
+  expect(name).not_to be_nil
+  name
+end
+
+def _get_model model, id, find_by = :name
+  expect(@main_service).not_to be_nil
+  @main_service.send(_pluralize(model)).all.select{|mod| mod.send(find_by) == id}.first
+end
+
+Given(/^that (\w+) name is not used$/) do |model|
+  expect(_get_model(model, _get_model_name(model))).to be_nil
+end
+
+When(/^I create the new (\w+)$/) do |model|
+  @main_service.send(_pluralize(model)).create(
+    name: _get_model_name(model),
+  )
+end
+
+When(/^I remove the (\w+)$/) do |model|
+  model_obj = instance_variable_get("@#{model}")
+  expect(model_obj).not_to be_nil
+  model_obj.destroy
+end
+
+Then(/^that (\w+) can be retrieved$/) do |model|
+  model_obj = _get_model(model, _get_model_name(model))
+  instance_variable_set("@#{model}", model_obj)
+  expect(model_obj).not_to be_nil
+end
+
+Then(/^that (\w+) cannot be retrieved$/) do |model|
+  model_obj = _get_model(model, _get_model_name(model))
+  instance_variable_set("@#{model}", model_obj)
+  expect(model_obj).to be_nil
+end
