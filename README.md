@@ -1,4 +1,4 @@
-# openstack acceptance test with cucumber
+# OpenStack acceptance test with cucumber
 
 When we build new openstack privete cloud, should be run an acceptance test.
 
@@ -11,7 +11,7 @@ Install dependencies.
 bundle
 ```
 
-### OpenStack Requiements
+### OpenStack Requirements
 
 - Your Keystone should have a member which associate to tenant 'service(default tenant)'.
 - A Member should have public key.
