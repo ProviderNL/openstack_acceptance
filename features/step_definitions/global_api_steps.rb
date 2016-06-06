@@ -6,7 +6,7 @@ Given(/^I have an OpenStack environment$/) do
   expect(@platform_config.keys).to include('openstack_auth_url')
 end
 
-def _access_account type
+Given(/^I have an? (admin|member) account$/) do |type|
   # Get config
   config = $os_config[type.to_s]
   expect(config).not_to be_nil
@@ -31,14 +31,6 @@ def _access_account type
   # Check if we have a proper connection
   expect(keystone.current_user).to eql(config['name'])
   expect(keystone.current_tenant['name']).to eql(config['project'])
-end
-
-Given(/^I have an admin account$/) do
-  _access_account :admin
-end
-
-Given(/^I have a member account$/) do
-  _access_account :member
 end
 
 def _retrieve_service as, service
