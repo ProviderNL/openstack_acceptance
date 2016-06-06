@@ -138,6 +138,8 @@ Contributing
 
 License and Authors
 -------------------
-Authors: sawanoboryu@higanworks.com (HiganWorks LLC)
+Authors:
+- sawanoboryu@higanworks.com (HiganWorks LLC)
+- Ferdi van der Werf <ferdi@provider.nl>
 
 Licensed under the MIT License;
