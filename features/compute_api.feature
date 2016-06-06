@@ -1,5 +1,6 @@
 # coding: utf-8
 
+@skip
 Feature: OpenStack Compute API
   As an OpenStack User
   I want to control an infrastructure with remote api
