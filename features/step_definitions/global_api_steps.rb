@@ -6,24 +6,39 @@ Given(/^I have an OpenStack environment\.$/) do
   expect(@platform_config.keys).to include('openstack_auth_url')
 end
 
-Given(/^I have an admin account$/) do
-  @admin_config = $os_config['admin']
-  @admin_connection_params = {
+def _access_account type
+  # Get config
+  config = $os_config[type.to_s]
+  expect(config).not_to be_nil
+  expect(@platform_config).not_to be_nil
+
+  # Create connection params
+  connection_params = {
     provider: :openstack,
     openstack_auth_url: @platform_config['openstack_auth_url'] + '/auth/tokens',
-    openstack_username: @admin_config['name'],
-    openstack_api_key: @admin_config['api_key'],
-    openstack_project_name: @admin_config['project'],
-    openstack_domain_id: @admin_config['domain'],
+    openstack_username: config['name'],
+    openstack_api_key: config['api_key'],
+    openstack_project_name: config['project'],
+    openstack_domain_id: config['domain'],
     connection_options: { ssl_verify_peer: false },
   }
+  self.instance_variable_set("@#{type}_connection_params", connection_params)
 
-  # Connect to keystone
-  @keystone = Fog::Identity.new @admin_connection_params
+  # Create keystone connection
+  keystone = Fog::Identity.new(connection_params)
+  self.instance_variable_set("@#{type}_keystone", keystone)
 
-  # Check if we have an admin connection
-  expect(@keystone.current_user).to eql('admin')
-  expect(@keystone.current_tenant['name']).to eql('admin')
+  # Check if we have a proper connection
+  expect(keystone.current_user).to eql(config['name'])
+  expect(keystone.current_tenant['name']).to eql(config['project'])
+end
+
+Given(/^I have an admin account$/) do
+  _access_account :admin
+end
+
+Given(/^I have a member account$/) do
+  _access_account :member
 end
 
 Given(/^I retrieve '(.*?)' service as an admin$/) do |service|
