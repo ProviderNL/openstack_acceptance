@@ -104,3 +104,11 @@ Then(/^that (\w+) cannot be retrieved$/) do |model|
   instance_variable_set("@#{model}", model_obj)
   expect(model_obj).to be_nil
 end
+
+Then(/attribute (\w+) on that (\w+) should be (true|false)/) do |attribute,model_name,value|
+  value = value.downcase == 'true'
+  model = instance_variable_get("@#{model_name}")
+  expect(model).not_to be_nil
+  expect(model).to respond_to(attribute)
+  expect(model.send(attribute)).to be value
+end

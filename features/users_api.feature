@@ -22,6 +22,6 @@ Feature: OpenStack Users API
     And that user name is not used
     When I create the new user
     Then that user can be retrieved
-    And that user should be enabled
+    And attribute enabled on that user should be true
     When I remove the user
     Then that user cannot be retrieved

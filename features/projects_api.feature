@@ -21,6 +21,6 @@ Feature: OpenStack Project API
     And that project name is not used
     When I create the new project
     Then that project can be retrieved
-    And that project should be enabled
+    And attribute enabled on that project should be true
     When I remove the project
     Then that project cannot be retrieved
