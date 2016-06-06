@@ -44,6 +44,8 @@ class OsAccept < Thor
     # build admin (dummy)
     add_to_admin_config 'Input openstack_admin username', 'name'
     add_to_admin_config 'Input openstack_admin_api_key(password)', 'api_key'
+    add_to_admin_config 'Input openstack_admin project name', 'project'
+    add_to_admin_config 'Input openstack_admin domain', 'domain'
 
     # build user
     add_to_member_config 'Input openstack_member_username', 'name'

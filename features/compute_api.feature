@@ -1,9 +1,10 @@
 # coding: utf-8
 
+@skip
 Feature: OpenStack Compute API
-  In order to provide services on OpenStack
-  As a OpnStack user
+  As an OpenStack User
   I want to control an infrastructure with remote api
+  In order to provide services on OpenStack
 
   Background: We have own OpenStack environment.
     Given I have an account which roled member of OpenStack
