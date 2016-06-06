@@ -10,7 +10,7 @@ Feature: OpenStack Project API
     Given I have an admin account
 
   Scenario: List projects
-    Given I retrieve 'Identity' service
+    Given I retrieve 'Identity' service as an admin
     Then there is at least one project
 
   Scenario: Create and delete project
