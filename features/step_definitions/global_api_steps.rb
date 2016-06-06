@@ -41,10 +41,18 @@ Given(/^I have a member account$/) do
   _access_account :member
 end
 
-Given(/^I retrieve '(.*?)' service as an admin$/) do |service|
+def _retrieve_service as, service
   # Save requested service as an instance variable
   self.instance_variable_set(
     "@#{service.downcase}",
-    Fog.const_get(service).new(@admin_connection_params),
+    Fog.const_get(service).new(instance_variable_get("@#{as}_connection_params"))
   )
+end
+
+Given(/^I retrieve '(.*?)' service as an admin$/) do |service|
+  _retrieve_service :admin, service
+end
+
+Given(/^I retrieve '(.*?)' service as a member$/) do |service|
+  _retrieve_service :member, service
 end
