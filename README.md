@@ -22,7 +22,7 @@ bundle
 Put your credentials to `./.os_accept.yml`
 
 ```
----                                                                                                                                                                                                                                              
+---
 :platform:
   :openstack_auth_url: http://192.0.2.1.:5000/v2.0
 :admin:
@@ -46,7 +46,7 @@ Commands:
 
 ### `os_accept init`
 
-Creates `.os_accept.yml` step by step. 
+Creates `.os_accept.yml` step by step.
 
 ```
 $ ./bin/os_accept init
