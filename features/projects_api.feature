@@ -11,11 +11,13 @@ Feature: OpenStack Project API
 
   Scenario: List projects
     Given I retrieve Identity service as an admin
-    Then there is at least one project
+    And I only use the Identity service
+    Then projects have at least one item
 
   Scenario: Create and delete project
     Given I retrieve Identity service as an admin
-    Given I generate a unique project name
+    And I only use the Identity service
+    Given I generate a project name
     And that project name is not used
     When I create the new project
     Then that project can be retrieved
