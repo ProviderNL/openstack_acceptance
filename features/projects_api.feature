@@ -14,7 +14,7 @@ Feature: OpenStack Project API
     Then there is at least one project
 
   Scenario: Create and delete project
-    Given I retrieve 'Identity' service
+    Given I retrieve 'Identity' service as an admin
     Given I generate a unique project name
     And that project name is not used
     When I create the new project

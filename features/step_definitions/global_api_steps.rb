@@ -26,7 +26,7 @@ Given(/^I have an admin account$/) do
   expect(@keystone.current_tenant['name']).to eql('admin')
 end
 
-Given(/^I retrieve '(.*?)' service$/) do |service|
+Given(/^I retrieve '(.*?)' service as an admin$/) do |service|
   # Save requested service as an instance variable
   self.instance_variable_set(
     "@#{service.downcase}",
