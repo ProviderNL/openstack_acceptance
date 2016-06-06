@@ -1,5 +1,6 @@
 require 'rspec/matchers'
 require 'fog'
+require 'fog/openstack'
 require 'yaml'
 
 include RSpec::Matchers
