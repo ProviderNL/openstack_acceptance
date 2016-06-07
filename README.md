@@ -1,6 +1,7 @@
 # OpenStack acceptance test with cucumber
 
-When we build new openstack privete cloud, should be run an acceptance test.
+When you have an OpenStack (private) cloud, you can use this test suite to verify if components are
+working as they should. The first iteration will only test the basics of the stack.
 
 
 ## Setup
