@@ -34,10 +34,14 @@ Given(/^I have an? (admin|member) account$/) do |type|
 end
 
 Given(/^I retrieve (\w+) service as an (admin|member)$/) do |service,as|
+  # Get connection params
+  connection_params = instance_variable_get "@#{as}_connection_params"
+  expect(connection_params).not_to be_nil
+
   # Save requested service as an instance variable
   self.instance_variable_set(
     "@#{service.downcase}",
-    Fog.const_get(service).new(instance_variable_get("@#{as}_connection_params"))
+    Fog.const_get(service).new(connection_params)
   )
 end
 
