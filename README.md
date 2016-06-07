@@ -37,54 +37,13 @@ To use guard for development of additional tests:
 
 ## Acceptance tests
 
+### Keystone
+* Projects (list, create, delete, TODO: update, assignment)
+* Roles (list, create, delete, TODO: update, assignment)
+* Users (list, create, delete, TODO: update)
 
-### Compute API acceptance
-
-`cucumber features/compute_api.feature`
-
-#### Scnario and result
-
-```
-# coding: utf-8
-Feature: OpenStack Compute API
-  In order to provide services on OpenStack
-  As a OpnStack user
-  I want to control an infrastructure with remote api
-
-  Background: We have own OpenStack environment.            # features/compute_api.feature:8
-    Given I have an account which roled member of OpenStack # features/step_definitions/compute_api_steps.rb:4
-    And My current tenant is available                      # features/step_definitions/compute_api_steps.rb:29
-
-  Scenario: Verify available Nework                         # features/compute_api.feature:12
-    Given I retrieve "Network" from API                     # features/step_definitions/compute_api_steps.rb:17
-    Then There is at least one ACTIVE router                # features/step_definitions/compute_api_steps.rb:35
-    And It has network "ext_net"                            # features/step_definitions/compute_api_steps.rb:41
-    And It has network "int_net"                            # features/step_definitions/compute_api_steps.rb:41
-
-  Scenario: Verify available Images                         # features/compute_api.feature:18
-    Given I retrieve "Image" from API                       # features/step_definitions/compute_api_steps.rb:17
-    Then There are at least one image                       # features/step_definitions/compute_api_steps.rb:46
-
-  Scenario: Verify computer dependencies                    # features/compute_api.feature:22
-    Given I retrieve "Compute" from API                     # features/step_definitions/compute_api_steps.rb:17
-    Then There are at least one flavor                      # features/step_definitions/compute_api_steps.rb:51
-    Then There are at least one keypair                     # features/step_definitions/compute_api_steps.rb:56
-
-  Scenario: Create and destroy Computer                               # features/compute_api.feature:27
-    Given I retrieve "Network" from API                               # features/step_definitions/compute_api_steps.rb:17
-    Given I retrieve "Image" from API                                 # features/step_definitions/compute_api_steps.rb:17
-    Given I retrieve "Compute" from API                               # features/step_definitions/compute_api_steps.rb:17
-    When A requirement which must be satisfied before create computer # features/step_definitions/compute_api_steps.rb:61
-    And I try to create computer with private nic                     # features/step_definitions/compute_api_steps.rb:71
-    Then new computer should be ACTIVE                                # features/step_definitions/compute_api_steps.rb:86
-    When I create floating_ip and associate to new computer           # features/step_definitions/compute_api_steps.rb:99
-    Then computer has valid attributes                                # features/step_definitions/compute_api_steps.rb:112
-    When I try to destroy new computer                                # features/step_definitions/compute_api_steps.rb:95
-    And I release floating_ip                                         # features/step_definitions/compute_api_steps.rb:107
-
-4 scenarios (4 passed)
-27 steps (27 passed)
-```
+### Nova
+* Servers (list, create, delete, TODO: update, and more)
 
 
 Contributing
