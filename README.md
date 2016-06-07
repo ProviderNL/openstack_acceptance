@@ -34,6 +34,9 @@ To use guard for development of additional tests:
 
     bundle exec guard
 
+To cleanup after failed runs, you can run:
+
+    bundle exec cucumber --tags @cleanup
 
 ## Acceptance tests
 
