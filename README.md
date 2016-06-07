@@ -45,6 +45,38 @@ To use guard for development of additional tests:
 ### Nova
 * Servers (list, create, delete, TODO: update, and more)
 
+### Example run
+```
+# coding: utf-8
+Feature: OpenStack Users API
+  As an OpenStack Admin
+  I want to control users with an API
+  In order to provide access on OpenStack
+
+  Background:                             # features/users_api.feature:9
+    Given I have an OpenStack environment # features/step_definitions/global_api_steps.rb:3
+    Given I have an admin account         # features/step_definitions/global_api_steps.rb:9
+
+  Scenario: List users                            # features/users_api.feature:13
+    Given I retrieve Identity service as an admin # features/step_definitions/global_api_steps.rb:36
+    And I only use the Identity service           # features/step_definitions/global_api_steps.rb:44
+    Then users have at least one item             # features/step_definitions/global_api_steps.rb:48
+
+  Scenario: Create and delete user                # features/users_api.feature:18
+    Given I retrieve Identity service as an admin # features/step_definitions/global_api_steps.rb:36
+    And I only use the Identity service           # features/step_definitions/global_api_steps.rb:44
+    Given I generate a user name                  # features/step_definitions/global_api_steps.rb:52
+    And that user name is not used                # features/step_definitions/global_api_steps.rb:80
+    When I create the new user                    # features/step_definitions/global_api_steps.rb:84
+    Then that user can be retrieved               # features/step_definitions/global_api_steps.rb:96
+    And that user should be enabled               # features/step_definitions/global_api_steps.rb:108
+    When I remove the user                        # features/step_definitions/global_api_steps.rb:90
+    Then that user cannot be retrieved            # features/step_definitions/global_api_steps.rb:102
+
+2 scenarios (2 passed)
+16 steps (16 passed)
+0m1.414s
+```
 
 Contributing
 ------------
