@@ -1,0 +1,13 @@
+---
+platform:
+  openstack_auth_url: http://10.10.10.10:35357/v3
+admin:
+  name: admin
+  api_key: admin_password
+  project: admin
+  domain: default
+member:
+  name: member
+  api_key: member_password
+  tenant: member_tenant
+  ssh_key: member_ssh_key_pair_name

@@ -4,76 +4,36 @@ When you have an OpenStack (private) cloud, you can use this test suite to verif
 working as they should. The first iteration will only test the basics of the stack.
 
 
-## Setup
+## Requirements
 
-Install dependencies.
-
-```
-bundle
-```
+### Local requirements
+* Ruby version: >= 1.9.3
+* System dependencies: rubygems, bundler
 
 ### OpenStack Requirements
 
-- Your Keystone should have a member which associate to tenant 'service(default tenant)'.
-- A Member should have public key.
-- Should import Image for nova.
+* Your Keystone should have a role `_member_`
+* The member from the config should have role `_member_` on the project it's assigned to
+* This member should have a public keypair
+* At least one image should be imported to test nova
 
-## Configure
+## Getting started
 
-Put your credentials to `./.os_accept.yml`
+1. Clone the repository: `git clone git@github.com:ProviderNL/openstack_acceptance.git`
+2. (_optional_) if using rbenv/rvm: set the ruby version you want to use and verify the correct version is used
+3. Make sure the bundler gem is installed: `gem install bundler`
+4. Run bundler to install all required gems: `bundler install`
+5. Copy `os_accept.sample.yml` to `.os_accept.yml` and enter your credentials
+6. Run `bundle exec cucumber --tags @setup` to verify your credentials and to make sure the member is setup correctly
 
-```
----
-:platform:
-  :openstack_auth_url: http://192.0.2.1.:5000/v2.0
-:admin:
-  :name: admin
-  :api_key: admin_password
-:member:
-  :name: member_name
-  :api_key: member_password
-  :tenant: service
-  :ssh_key: ssh_key_name
-```
+To run the full suite, use:
 
-### config builder `bin/os_accept `
+    bundle exec cucumber
 
+To use guard for development of additional tests:
 
-```
-Commands:
-  os_accept help [COMMAND]  # Describe available commands or one specific command
-  os_accept init            # initialize: create configfile with ask
-```
+    bundle exec guard
 
-### `os_accept init`
-
-Creates `.os_accept.yml` step by step.
-
-```
-$ ./bin/os_accept init
-Input openstack_auth_url
-?  http://192.0.2.1.:5000/v2.0
-
-Input openstack_admin username
-? admin
-
-Input openstack_admin_api_key(password)
-? admin_password
-
-Input openstack_member_username
-?  member_name
-
-Input openstack_member_api_key(password)
-?  member_password
-
-Input openstack_member_current_tenant
-?  service
-
-Input openstack_member_ssh_keyname
-?  ssh_key_name
-
-I, [2013-09-18T18:55:58.279663 #1656]  INFO -- : ConfigFile created.
-```
 
 ## Acceptance tests
 
