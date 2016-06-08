@@ -68,12 +68,11 @@ Given(/^I generate a (\w+) name$/) do |model|
 end
 
 def _pluralize model
-  case model
-  when 'unknown_model'
-    ''
-  else
-    "#{model}s"
-  end
+  model.end_with?('s') ? model : "#{model}s"
+end
+
+def _singularize models
+  models.end_with?('s') ? models[0..-2] : models
 end
 
 def _get_model_name model
