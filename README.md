@@ -24,7 +24,8 @@ working as they should. The first iteration will only test the basics of the sta
 3. Make sure the bundler gem is installed: `gem install bundler`
 4. Run bundler to install all required gems: `bundler install`
 5. Copy `os_accept.sample.yml` to `.os_accept.yml` and enter your credentials
-6. Run `bundle exec cucumber --tags @setup` to verify your credentials and to make sure the member is setup correctly
+6. Run `bundle exec cucumber --profile setup` to verify your credentials and to make sure the
+member is setup correctly
 
 To run the full suite, use:
 
@@ -36,7 +37,7 @@ To use guard for development of additional tests:
 
 To cleanup after failed runs, you can run:
 
-    bundle exec cucumber --tags @cleanup
+    bundle exec cucumber --profile cleanup
 
 ## Acceptance tests
 
