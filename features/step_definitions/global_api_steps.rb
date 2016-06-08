@@ -40,7 +40,7 @@ Given(/^I have an? (admin|member) account$/) do |type|
   expect(keystone.current_tenant['name']).to eql(config['project'])
 end
 
-Given(/^I retrieve (\w+) service as an (admin|member)$/) do |service,as|
+Given(/^I retrieve (\w+) service as an? (admin|member)$/) do |service,as|
   # Get connection params
   connection_params = instance_variable_get "@#{as}_connection_params"
   expect(connection_params).not_to be_nil
