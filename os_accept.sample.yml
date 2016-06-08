@@ -9,5 +9,6 @@ admin:
 member:
   name: member
   api_key: member_password
-  tenant: member_tenant
+  project: member_tenant
+  domain: default
   ssh_key: member_ssh_key_pair_name
