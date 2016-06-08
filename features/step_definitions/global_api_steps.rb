@@ -54,6 +54,7 @@ end
 
 Given(/I only use the (\w+) service/) do |service|
   @main_service = instance_variable_get("@#{service.downcase}")
+  expect(@main_service).not_to be_nil
 end
 
 Then(/(\w+) have at least one item/) do |model|
