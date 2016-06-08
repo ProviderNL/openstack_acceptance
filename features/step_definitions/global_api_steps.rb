@@ -60,11 +60,12 @@ Then(/(\w+) have at least one item/) do |model|
   expect(@main_service.send(model).all.count).to be >= 1
 end
 
+def _generate_name model, rand_length = 4
+  "ccmbr-#{model}-#{SecureRandom.hex(rand_length)}"
+end
+
 Given(/^I generate a (\w+) name$/) do |model|
-  instance_variable_set(
-    "@#{model}_name",
-    "ccmbr-#{model}-#{SecureRandom.hex(4)}",
-  )
+  instance_variable_set("@#{model}_name", _generate_name(model))
 end
 
 def _pluralize model
