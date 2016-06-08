@@ -1,0 +1,14 @@
+---
+admin:
+  auth_url: http://10.10.10.10:35357/v3
+  name: admin
+  api_key: admin_password
+  project: admin
+  domain: default
+member:
+  auth_url: http://public.openstack.org:5000/v3
+  name: member
+  api_key: member_password
+  project: member_tenant
+  domain: default
+  ssh_key: member_ssh_key_pair_name

@@ -1,21 +1,28 @@
 # coding: utf-8
 
 Given(/^I have an OpenStack environment$/) do
-  expect($os_config.keys).to include('platform')
-  @platform_config = $os_config['platform']
-  expect(@platform_config.keys).to include('openstack_auth_url')
+  %w{admin member}.each do |as|
+    expect($os_config.keys).to include(as)
+    expect($os_config[as]).to be_a Hash
+
+    conf = $os_config[as]
+    %w{auth_url name api_key project domain}.each do |key|
+      expect(conf.keys).to include(key)
+      expect(conf[key]).not_to be_nil
+      expect(conf[key]).not_to eql('')
+    end
+  end
 end
 
 Given(/^I have an? (admin|member) account$/) do |type|
   # Get config
-  config = $os_config[type.to_s]
+  config = $os_config[type]
   expect(config).not_to be_nil
-  expect(@platform_config).not_to be_nil
 
   # Create connection params
   connection_params = {
     provider: :openstack,
-    openstack_auth_url: @platform_config['openstack_auth_url'] + '/auth/tokens',
+    openstack_auth_url: config['auth_url'] + '/auth/tokens',
     openstack_username: config['name'],
     openstack_api_key: config['api_key'],
     openstack_project_name: config['project'],
@@ -33,11 +40,15 @@ Given(/^I have an? (admin|member) account$/) do |type|
   expect(keystone.current_tenant['name']).to eql(config['project'])
 end
 
-Given(/^I retrieve (\w+) service as an (admin|member)$/) do |service,as|
+Given(/^I retrieve (\w+) service as an? (admin|member)$/) do |service,as|
+  # Get connection params
+  connection_params = instance_variable_get "@#{as}_connection_params"
+  expect(connection_params).not_to be_nil
+
   # Save requested service as an instance variable
   self.instance_variable_set(
     "@#{service.downcase}",
-    Fog.const_get(service).new(instance_variable_get("@#{as}_connection_params"))
+    Fog.const_get(service).new(connection_params)
   )
 end
 
@@ -49,20 +60,20 @@ Then(/(\w+) have at least one item/) do |model|
   expect(@main_service.send(model).all.count).to be >= 1
 end
 
+def _generate_name model, rand_length = 4
+  "ccmbr-#{model}-#{SecureRandom.hex(rand_length)}"
+end
+
 Given(/^I generate a (\w+) name$/) do |model|
-  instance_variable_set(
-    "@#{model}_name",
-    "ccmbr-#{model}-#{SecureRandom.hex(4)}",
-  )
+  instance_variable_set("@#{model}_name", _generate_name(model))
 end
 
 def _pluralize model
-  case model
-  when 'unknown_model'
-    ''
-  else
-    "#{model}s"
-  end
+  model.end_with?('s') ? model : "#{model}s"
+end
+
+def _singularize models
+  models.end_with?('s') ? models[0..-2] : models
 end
 
 def _get_model_name model

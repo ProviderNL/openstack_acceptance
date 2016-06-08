@@ -1,143 +1,97 @@
-# openstack acceptance test with cucumber
+# OpenStack acceptance test with cucumber
 
-When we build new openstack privete cloud, should be run an acceptance test.
-
-
-## Setup
-
-Install dependencies.
-
-```
-bundle
-```
-
-### OpenStack Requiements
-
-- Your Keystone should have a member which associate to tenant 'service(default tenant)'.
-- A Member should have public key.
-- Should import Image for nova.
-
-## Configure
-
-Put your credentials to `./.os_accept.yml`
-
-```
----                                                                                                                                                                                                                                              
-:platform:
-  :openstack_auth_url: http://192.0.2.1.:5000/v2.0
-:admin:
-  :name: admin
-  :api_key: admin_password
-:member:
-  :name: member_name
-  :api_key: member_password
-  :tenant: service
-  :ssh_key: ssh_key_name
-```
-
-### config builder `bin/os_accept `
+When you have an OpenStack (private) cloud, you can use this test suite to verify if components are
+working as they should. The first iteration will only test the basics of the stack.
 
 
-```
-Commands:
-  os_accept help [COMMAND]  # Describe available commands or one specific command
-  os_accept init            # initialize: create configfile with ask
-```
+## Requirements
 
-### `os_accept init`
+### Local requirements
+* Ruby version: >= 1.9.3
+* System dependencies: rubygems, bundler
 
-Creates `.os_accept.yml` step by step. 
+### OpenStack Requirements
 
-```
-$ ./bin/os_accept init
-Input openstack_auth_url
-?  http://192.0.2.1.:5000/v2.0
+* Your Keystone should have a role `_member_`
+* The member from the config should have role `_member_` on the project it's assigned to
+* This member should have a public keypair
+* At least one image should be imported to test nova
 
-Input openstack_admin username
-? admin
+## Getting started
 
-Input openstack_admin_api_key(password)
-? admin_password
+1. Clone the repository: `git clone git@github.com:ProviderNL/openstack_acceptance.git`
+2. (_optional_) if using rbenv/rvm: set the ruby version you want to use and verify the correct version is used
+3. Make sure the bundler gem is installed: `gem install bundler`
+4. Run bundler to install all required gems: `bundler install`
+5. Copy `os_accept.sample.yml` to `.os_accept.yml` and enter your credentials
+6. Run `bundle exec cucumber --profile setup` to verify your credentials and to make sure the
+member is setup correctly
 
-Input openstack_member_username
-?  member_name
+To run the full suite, use:
 
-Input openstack_member_api_key(password)
-?  member_password
+    bundle exec cucumber
 
-Input openstack_member_current_tenant
-?  service
+To use guard for development of additional tests:
 
-Input openstack_member_ssh_keyname
-?  ssh_key_name
+    bundle exec guard
 
-I, [2013-09-18T18:55:58.279663 #1656]  INFO -- : ConfigFile created.
-```
+To cleanup after failed runs, you can run:
+
+    bundle exec cucumber --profile cleanup
 
 ## Acceptance tests
 
+### Keystone
+* Projects (list, create, delete, TODO: update, assignment)
+* Roles (list, create, delete, TODO: update, assignment)
+* Users (list, create, delete, TODO: update)
 
-### Compute API acceptance
+### Nova
+* Servers (list, create, delete, TODO: update, and more)
 
-`cucumber features/compute_api.feature`
-
-#### Scnario and result
-
+### Example run
 ```
 # coding: utf-8
-Feature: OpenStack Compute API
-  In order to provide services on OpenStack
-  As a OpnStack user
-  I want to control an infrastructure with remote api
+Feature: OpenStack Users API
+  As an OpenStack Admin
+  I want to control users with an API
+  In order to provide access on OpenStack
 
-  Background: We have own OpenStack environment.            # features/compute_api.feature:8
-    Given I have an account which roled member of OpenStack # features/step_definitions/compute_api_steps.rb:4
-    And My current tenant is available                      # features/step_definitions/compute_api_steps.rb:29
+  Background:                             # features/users_api.feature:9
+    Given I have an OpenStack environment # features/step_definitions/global_api_steps.rb:3
+    Given I have an admin account         # features/step_definitions/global_api_steps.rb:9
 
-  Scenario: Verify available Nework                         # features/compute_api.feature:12
-    Given I retrieve "Network" from API                     # features/step_definitions/compute_api_steps.rb:17
-    Then There is at least one ACTIVE router                # features/step_definitions/compute_api_steps.rb:35
-    And It has network "ext_net"                            # features/step_definitions/compute_api_steps.rb:41
-    And It has network "int_net"                            # features/step_definitions/compute_api_steps.rb:41
+  Scenario: List users                            # features/users_api.feature:13
+    Given I retrieve Identity service as an admin # features/step_definitions/global_api_steps.rb:36
+    And I only use the Identity service           # features/step_definitions/global_api_steps.rb:44
+    Then users have at least one item             # features/step_definitions/global_api_steps.rb:48
 
-  Scenario: Verify available Images                         # features/compute_api.feature:18
-    Given I retrieve "Image" from API                       # features/step_definitions/compute_api_steps.rb:17
-    Then There are at least one image                       # features/step_definitions/compute_api_steps.rb:46
+  Scenario: Create and delete user                # features/users_api.feature:18
+    Given I retrieve Identity service as an admin # features/step_definitions/global_api_steps.rb:36
+    And I only use the Identity service           # features/step_definitions/global_api_steps.rb:44
+    Given I generate a user name                  # features/step_definitions/global_api_steps.rb:52
+    And that user name is not used                # features/step_definitions/global_api_steps.rb:80
+    When I create the new user                    # features/step_definitions/global_api_steps.rb:84
+    Then that user can be retrieved               # features/step_definitions/global_api_steps.rb:96
+    And that user should be enabled               # features/step_definitions/global_api_steps.rb:108
+    When I remove the user                        # features/step_definitions/global_api_steps.rb:90
+    Then that user cannot be retrieved            # features/step_definitions/global_api_steps.rb:102
 
-  Scenario: Verify computer dependencies                    # features/compute_api.feature:22
-    Given I retrieve "Compute" from API                     # features/step_definitions/compute_api_steps.rb:17
-    Then There are at least one flavor                      # features/step_definitions/compute_api_steps.rb:51
-    Then There are at least one keypair                     # features/step_definitions/compute_api_steps.rb:56
-
-  Scenario: Create and destroy Computer                               # features/compute_api.feature:27
-    Given I retrieve "Network" from API                               # features/step_definitions/compute_api_steps.rb:17
-    Given I retrieve "Image" from API                                 # features/step_definitions/compute_api_steps.rb:17
-    Given I retrieve "Compute" from API                               # features/step_definitions/compute_api_steps.rb:17
-    When A requirement which must be satisfied before create computer # features/step_definitions/compute_api_steps.rb:61
-    And I try to create computer with private nic                     # features/step_definitions/compute_api_steps.rb:71
-    Then new computer should be ACTIVE                                # features/step_definitions/compute_api_steps.rb:86
-    When I create floating_ip and associate to new computer           # features/step_definitions/compute_api_steps.rb:99
-    Then computer has valid attributes                                # features/step_definitions/compute_api_steps.rb:112
-    When I try to destroy new computer                                # features/step_definitions/compute_api_steps.rb:95
-    And I release floating_ip                                         # features/step_definitions/compute_api_steps.rb:107
-
-4 scenarios (4 passed)
-27 steps (27 passed)
+2 scenarios (2 passed)
+16 steps (16 passed)
+0m1.414s
 ```
 
-
-Contributing
-------------
+## Contributing
 
 1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
+2. Create a named feature branch (git flow style, like `feature/add_component_x`)
 3. Write you change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+4. Run the tests, ensuring they all pass
+5. Submit a Pull Request using Github
 
-License and Authors
--------------------
-Authors: sawanoboryu@higanworks.com (HiganWorks LLC)
+## License and Authors
+- sawanoboryu@higanworks.com (HiganWorks LLC)
+- Ferdi van der Werf <ferdi@provider.nl>
 
 Licensed under the MIT License;
