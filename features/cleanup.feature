@@ -13,3 +13,5 @@ Feature: OpenStack Setup Test
   Scenario: List services
     Given I retrieve Identity service as an admin
     Then lingering projects, roles and users on Identity are cleaned
+    Given I retrieve Compute service as an admin
+    Then lingering flavors on Compute are cleaned

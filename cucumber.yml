@@ -1,4 +1,5 @@
 ---
 default: --tags ~@skip --tags ~@setup --tags ~@cleanup --format pretty
-setup: --tags ~@skip --tags @setup --tags ~@cleanup --format pretty
-cleanup: --tags ~@skip --tags ~@setup --tags @cleanup --format pretty
+setup: --tags ~@skip --tags @setup --format pretty
+cleanup: --tags ~@skip --tags @cleanup --format pretty
+wip: --tags @wip --tags ~@skip --format pretty
