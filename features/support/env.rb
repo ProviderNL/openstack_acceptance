@@ -2,6 +2,7 @@ require 'rspec/matchers'
 require 'rspec/expectations'
 require 'fog'
 require 'fog/openstack'
+require 'net/ssh'
 require 'yaml'
 
 include RSpec::Matchers

@@ -3,4 +3,4 @@ Gemfile.lock
 .ruby-gemset
 .ruby-version
 .os_accept.yml
-
+.keys

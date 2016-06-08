@@ -65,3 +65,47 @@ Then(/^I want the member to be part of the project$/) do
     @project.grant_role_to_user(@role.id, @member.id)
   end
 end
+
+Given(/^I have the keypair on disk$/) do
+  # We need the member config
+  expect(@member_config).not_to be_nil
+
+  # Get key dir
+  keys_path = File.expand_path('../../../.keys', __FILE__)
+  Dir.mkdir(keys_path) unless File.exists?(keys_path)
+  priv_path = File.join(keys_path, @member_config['ssh_key'])
+  pub_path = File.join(keys_path, "#{@member_config['ssh_key']}.pub")
+
+  # Check if key and pub exist
+  if File.exists?(priv_path) && File.exists?(pub_path)
+    @pub_key = File.read(pub_path)
+  else
+    rsa_key = OpenSSL::PKey::RSA.new 2048
+
+    priv_file = File.new(priv_path, 'w')
+    priv_file.write(rsa_key.to_pem)
+    priv_file.close
+
+    @pub_key = "#{rsa_key.ssh_type} #{[rsa_key.to_blob].pack('m0')}\n"
+
+    pub_file = File.new(pub_path, 'w')
+    pub_file.write(@pub_key)
+    pub_file.close
+  end
+
+  expect(@pub_key).not_to be_nil
+  expect(@pub_key).to start_with('ssh-rsa ')
+end
+
+Then(/^I want the keypair to exist on the platform$/) do
+  expect(@member_config).not_to be_nil
+  expect(@pub_key).not_to be_nil
+  expect(@pub_key).to start_with('ssh-rsa ')
+
+  unless @compute.key_pairs.get(@member_config['ssh_key'])
+    @compute.key_pairs.create(
+      name: @member_config['ssh_key'],
+      public_key: @pub_key,
+    )
+  end
+end

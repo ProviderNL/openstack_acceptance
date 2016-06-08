@@ -23,3 +23,11 @@ Feature: OpenStack Setup Test
     And I want the member to exist
     And I want the role _member_ to exist
     And I want the member to be part of the project
+
+  Scenario: Member has a keypair
+    Given I have a member account
+    And I retrieve Identity service as a member
+    And I retrieve Compute service as a member
+    And I know the configuration for the member
+    And I have the keypair on disk
+    Then I want the keypair to exist on the platform
