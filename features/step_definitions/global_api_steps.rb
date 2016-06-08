@@ -1,21 +1,28 @@
 # coding: utf-8
 
 Given(/^I have an OpenStack environment$/) do
-  expect($os_config.keys).to include('platform')
-  @platform_config = $os_config['platform']
-  expect(@platform_config.keys).to include('openstack_auth_url')
+  %w{admin member}.each do |as|
+    expect($os_config.keys).to include(as)
+    expect($os_config[as]).to be_a Hash
+
+    conf = $os_config[as]
+    %w{auth_url name api_key project domain}.each do |key|
+      expect(conf.keys).to include(key)
+      expect(conf[key]).not_to be_nil
+      expect(conf[key]).not_to eql('')
+    end
+  end
 end
 
 Given(/^I have an? (admin|member) account$/) do |type|
   # Get config
-  config = $os_config[type.to_s]
+  config = $os_config[type]
   expect(config).not_to be_nil
-  expect(@platform_config).not_to be_nil
 
   # Create connection params
   connection_params = {
     provider: :openstack,
-    openstack_auth_url: @platform_config['openstack_auth_url'] + '/auth/tokens',
+    openstack_auth_url: config['auth_url'] + '/auth/tokens',
     openstack_username: config['name'],
     openstack_api_key: config['api_key'],
     openstack_project_name: config['project'],
