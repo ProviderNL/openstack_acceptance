@@ -1,6 +1,5 @@
 # coding: utf-8
 
-@wip
 Feature: OpenStack Users API
   As an OpenStack Admin
   I want to control users with an API
