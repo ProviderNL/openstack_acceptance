@@ -99,6 +99,51 @@ When(/^I create the new (\w+)$/) do |model|
   )
 end
 
+When(/^I create the new (\w+) with additional attributes:$/) do |model, attributes|
+  attrs = attributes.transpose.symbolic_hashes.first
+  @main_service.send(_pluralize(model)).create(attrs.merge(name: _get_model_name(model)))
+end
+
+When(/^I change the (\w+) attribute (\w+) to (\w+)$/) do |model_name, attribute, value|
+  model = instance_variable_get("@#{model_name}")
+  expect(model).not_to be_nil
+  expect(model).to respond_to(attribute)
+  expect(model).to respond_to("#{attribute}=")
+
+  model.send(
+    "#{attribute}=",
+    case model.send(attribute).class.to_s
+    when 'String'
+      value
+    when 'Fixnum'
+      value.to_i
+    when 'Float'
+      value.to_f
+    when 'TrueClass'
+      value.downcase == 'true'
+    when 'FalseClass'
+      value.downcase == 'true'
+    else
+      puts "Unkown class: #{model.send(attribute).class}"
+      nil
+    end
+  )
+  model.save
+
+  expect(model.send(attribute).to_s).to eql(value)
+end
+
+When(/^I reload the (\w+)$/) do |model|
+  steps "Then that #{model} can be retrieved"
+end
+
+Then(/^I see on the (\w+) that the attribute (\w+) is (\w+)$/) do |model_name, attribute, value|
+  model = instance_variable_get("@#{model_name}")
+  expect(model).not_to be_nil
+  expect(model).to respond_to(attribute)
+  expect(model.send(attribute).to_s).to eql(value)
+end
+
 When(/^I remove the (\w+)$/) do |model|
   model_obj = instance_variable_get("@#{model}")
   expect(model_obj).not_to be_nil

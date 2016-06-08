@@ -22,5 +22,8 @@ Feature: OpenStack Project API
     When I create the new project
     Then that project can be retrieved
     And attribute enabled on that project should be true
+    When I change the project attribute enabled to false
+    And I reload the project
+    Then I see on the project that the attribute enabled is false
     When I remove the project
     Then that project cannot be retrieved
