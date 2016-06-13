@@ -1,6 +1,6 @@
 # openstack acceptance test with cucumber
 
-When we build new openstack privete cloud, should be run an acceptance test.
+When we build new openstack private cloud, should be run an acceptance test.
 
 
 ## Setup
