@@ -10,7 +10,6 @@ Feature: OpenStack KeyPair API
     Given I have a member account
     Given I have a keypair locally
 
-  @wip
   Scenario: Manage key pairs
     Given I retrieve Compute service as a member
     And I only use the Compute service
