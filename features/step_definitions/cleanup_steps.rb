@@ -14,6 +14,7 @@ Then(/^lingering (\w+) on (\w+) are cleaned$/) do |models_name,service_name|
 
   prefix = _generate_name(_singularize(models_name), 0)
   models = service.send(models_name).all.select{|model| model.name.start_with?(prefix)}
+  puts "Cleaning up #{models.count} #{models_name}" if models.count > 0
   models.each do |model|
     model.destroy
   end
