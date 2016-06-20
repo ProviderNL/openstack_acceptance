@@ -169,3 +169,15 @@ Then(/attribute (\w+) on that (\w+) should be (true|false)/) do |attribute,model
   expect(model).to respond_to(attribute)
   expect(model.send(attribute)).to be value
 end
+
+Given(/^I have a keypair locally$/) do
+  # Get config
+  config = $os_config['member']
+  expect(config).not_to be_nil
+  expect($keys_path).not_to be_nil
+
+  @key_pair_name = config['ssh_key']
+  expect(@key_pair_name).not_to be_nil
+  @key_pair_pubkey = File.read(File.join($keys_path, "#{@key_pair_name}.pub"))
+  expect(@key_pair_pubkey).not_to be_nil
+end

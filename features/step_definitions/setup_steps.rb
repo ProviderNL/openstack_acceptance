@@ -71,10 +71,8 @@ Given(/^I have the keypair on disk$/) do
   expect(@member_config).not_to be_nil
 
   # Get key dir
-  keys_path = File.expand_path('../../../.keys', __FILE__)
-  Dir.mkdir(keys_path) unless File.exists?(keys_path)
-  priv_path = File.join(keys_path, @member_config['ssh_key'])
-  pub_path = File.join(keys_path, "#{@member_config['ssh_key']}.pub")
+  priv_path = File.join($keys_path, @member_config['ssh_key'])
+  pub_path = File.join($keys_path, "#{@member_config['ssh_key']}.pub")
 
   # Check if key and pub exist
   if File.exists?(priv_path) && File.exists?(pub_path)
