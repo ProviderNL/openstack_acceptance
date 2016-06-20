@@ -14,3 +14,7 @@ unless File.exists?(config_file)
   exit
 end
 $os_config = YAML.load_file(config_file)
+
+# Keypair path
+$keys_path = File.expand_path('../../../.keys', __FILE__)
+Dir.mkdir($keys_path) unless File.exists?($keys_path)
